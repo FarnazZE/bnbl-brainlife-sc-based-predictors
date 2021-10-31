@@ -2,7 +2,7 @@
 <!-- [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.1-blue.svg)](https://doi.org/10.25663/brainlife.app.435) -->
 
 # Description
-Brainlife App for creating edge time series from regional fMRI time series. Edge time series is calculated as the dot product of z-scored regional fMRI time series. 
+Brainlife App for generating a set of predictors from structural connectivity matrix. 
 ### Authors
 - [Farnaz Zamani Esfahlani]
 
@@ -21,9 +21,7 @@ brainlife.io is publicly funded and for the sustainability of the project it is 
 [![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
 
 ### Citations
-1. Faskowitz, J., Esfahlani, F. Z., Jo, Y., Sporns, O., & Betzel, R. F. (2020). Edge-centric functional network representations of human cerebral cortex reveal overlapping system-level architecture. Nature neuroscience, 23(12), 1644-1654.
-
-2. Esfahlani, F. Z., Jo, Y., Faskowitz, J., Byrge, L., Kennedy, D. P., Sporns, O., & Betzel, R. F. (2020). High-amplitude cofluctuations in cortical activity drive functional connectivity. Proceedings of the National Academy of Sciences, 117(45), 28393-28401.
+1. Esfahlani, F. Z., Faskowitz, J., Slack, J., Misic, B., & Betzel, R. (2021). Local structure-function relationships in human brain networks across the human lifespan. bioRxiv. 
 
 
 <!-- 3. Costa, L. da F., Francisco A. Rodrigues, Gonzalo Travieso, and Paulino Ribeiro Villas Boas. "Characterization of complex networks: A survey of measurements." Advances in physics 56, no. 1 (2007): 167-242.[https://doi.org/10.1080/00018730601170527](https://doi.org/10.1080/00018730601170527) -->
