@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 from scipy.linalg import expm
+from scipy.spatial.distance import pdist, squareform
 import os
 import sys
 from pathlib import Path
@@ -25,50 +26,318 @@ if(not os.path.exists(outputDirectory)):
 with open(configFilename, "r") as fd:
     config = json.load(fd)
 
+#Functions
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def retrieve_shortest_path(s, t, hops, Pmat):
+    path_length = hops[s, t]
+    if path_length != 0:
+        path = np.zeros((int(path_length + 1), 1), dtype='int')
+        path[0] = s
+        for ind in range(1, len(path)):
+            s = Pmat[s, t]
+            path[ind] = s
+    else:
+        path = []
+
+    return path
+
+
+def distance_wei_floyd(adjacency, transform=None):
+    if transform is not None:
+        if transform == 'log':
+            if np.logical_or(adjacency > 1, adjacency < 0).any():
+                raise ValueError("Connection strengths must be in the " +
+                                 "interval [0,1) to use the transform " +
+                                 "-log(w_ij).")
+            SPL = -np.log(adjacency)
+        elif transform == 'inv':
+            SPL = 1. / adjacency
+        else:
+            raise ValueError("Unexpected transform type. Only 'log' and " +
+                             "'inv' are accepted")
+    else:
+        SPL = adjacency.copy().astype('float')
+        SPL[SPL == 0] = np.inf
+
+    n = adjacency.shape[1]
+
+    flag_find_paths = True
+    hops = np.array(adjacency != 0).astype('float')
+    Pmat = np.repeat(np.atleast_2d(np.arange(0, n)), n, 0)
+
+    for k in range(n):
+        i2k_k2j = np.repeat(SPL[:, [k]], n, 1) + np.repeat(SPL[[k], :], n, 0)
+
+        if flag_find_paths:
+            path = SPL > i2k_k2j
+            i, j = np.where(path)
+            hops[path] = hops[i, k] + hops[k, j]
+            Pmat[path] = Pmat[i, k]
+
+        SPL = np.min(np.stack([SPL, i2k_k2j], 2), 2)
+
+    I = np.eye(n) > 0
+    SPL[I] = 0
+
+    if flag_find_paths:
+        hops[I], Pmat[I] = 0, 0
+
+    return SPL, hops, Pmat
+
+
+
+def search_information(adjacency, transform=None, has_memory=False):
+    N = len(adjacency)
+
+    if np.allclose(adjacency, adjacency.T):
+        flag_triu = True
+    else:
+        flag_triu = False
+
+    T = np.linalg.solve(np.diag(np.sum(adjacency, axis=1)), adjacency)
+    _, hops, Pmat = distance_wei_floyd(adjacency, transform)
+
+    SI = np.zeros((N, N))
+    SI[np.eye(N) > 0] = np.nan
+
+    for i in range(N):
+        for j in range(N):
+            if (j > i and flag_triu) or (not flag_triu and i != j):
+                path = retrieve_shortest_path(i, j, hops, Pmat)
+                lp = len(path) - 1
+                if flag_triu:
+                    if np.any(path):
+                        pr_step_ff = np.zeros(lp)
+                        pr_step_bk = np.zeros(lp)
+                        if has_memory:
+                            pr_step_ff[0] = T[path[0], path[1]]
+                            pr_step_bk[lp-1] = T[path[lp], path[lp-1]]
+                            for z in range(1, lp):
+                                pr_step_ff[z] = T[path[z], path[z+1]] / (1 - T[path[z-1], path[z]])
+                                pr_step_bk[lp-z-1] = T[path[lp-z], path[lp-z-1]] / (1 - T[path[lp-z+1], path[lp-z]])
+                        else:
+                            for z in range(lp):
+                                pr_step_ff[z] = T[path[z], path[z+1]]
+                                pr_step_bk[z] = T[path[z+1], path[z]]
+
+                        prob_sp_ff = np.prod(pr_step_ff)
+                        prob_sp_bk = np.prod(pr_step_bk)
+                        SI[i, j] = -np.log2(prob_sp_ff)
+                        SI[j, i] = -np.log2(prob_sp_bk)
+                else:
+                    if np.any(path):
+                        pr_step_ff = np.zeros(lp)
+                        if has_memory:
+                            pr_step_ff[0] = T[path[0], path[1]]
+                            for z in range(1, lp):
+                                pr_step_ff[z] = T[path[z], path[z+1]] / (1 - T[path[z-1], path[z]])
+                        else:
+                            for z in range(lp):
+                                pr_step_ff[z] = T[path[z], path[z+1]]
+
+                        prob_sp_ff = np.prod(pr_step_ff)
+                        SI[i, j] = -np.log2(prob_sp_ff)
+                    else:
+                        SI[i, j] = np.inf
+
+    return SI
+
+
+#added by Farnaz
+def path_transitivity(W,transform=None):        
+    n=len(W)
+    m=np.zeros((n,n))
+    T=np.zeros((n,n))
+    
+    for i in range(n-1):
+        for j in range(i+1,n):
+            x=0
+            y=0
+            z=0
+            for k in range(n):
+                if W[i,k]!=0 and W[j,k]!=0 and k!=i and k!=j:
+                    x=x+W[i,k]+W[j,k]
+                
+                if k!=j:
+                    y=y+W[i,k]
+                if k!=i:
+                    z=z+W[j,k]
+            m[i,j]=x/(y+z)
+    m=m+m.transpose()
+    
+    _,hops,Pmat = distance_wei_floyd(W,transform)
+    
+    #% --- path transitivity ---%%
+    for i in range(n-1):
+        for j in range(i+1,n):
+            x=0
+            path = retrieve_shortest_path(i,j,hops,Pmat)
+            K=len(path)
+            
+            for t in range(K-1):
+                for l in range(t+1,K):
+                    x=x+m[path[t],path[l]]
+            T[i,j]=2*x/(K*(K-1))
+    T=T+T.transpose()
+    
+    return T
+
+
+def communicability_wei(CIJ):
+    N = np.size(CIJ,1)
+    B = sum(CIJ.transpose())
+    C = np.power(B, -0.5)
+    D = np.diag(C)
+    E = np.matmul(np.matmul(D,CIJ),D)
+    F = expm(E)
+    F[np.diag_indices_from(F)] = 0
+    return F
+
+
+
+def mean_first_passage_time(adjacency):
+    P = np.linalg.solve(np.diag(np.sum(adjacency, axis=1)), adjacency)
+
+    n = len(P)
+    D, V = np.linalg.eig(P.T)
+
+    aux = np.abs(D - 1)
+    index = np.where(aux == aux.min())[0]
+
+    if aux[index] > 10e-3:
+        raise ValueError("Cannot find eigenvalue of 1. Minimum eigenvalue " +
+                         "value is {0}. Tolerance was ".format(aux[index]+1) +
+                         "set at 10e-3.")
+
+    w = V[:, index].T
+    w = w / np.sum(w)
+
+    W = np.real(np.repeat(w, n, 0))
+    I = np.eye(n)
+
+    Z = np.linalg.inv(I - P + W)
+
+    mfpt = (np.repeat(np.atleast_2d(np.diag(Z)), n, 0) - Z) / W
+
+    return mfpt
+
+
+def matching_ind_und(CIJ0):
+    K = np.sum(CIJ0, axis=0)
+    n = len(CIJ0)
+    R = (K != 0)
+    N = np.sum(R)
+    xR, = np.where(R == 0)
+    CIJ = np.delete(np.delete(CIJ0, xR, axis=0), xR, axis=1)
+    inv_eye = np.logical_not(np.eye(N))
+    M = np.zeros((N, N))
+
+    for i in range(N):
+        c1 = CIJ[i, :]
+        use = np.logical_or(c1, CIJ)
+        use[:, i] = 0
+        use *= inv_eye
+
+        ncon1 = c1 * use
+        ncon2 = c1 * CIJ
+        ncon = np.sum(ncon1 + ncon2, axis=1)
+        print(ncon)
+
+        M[:, i] = 2 * np.sum(np.logical_and(ncon1, ncon2), axis=1) / ncon
+
+    M *= inv_eye
+    M[np.isnan(M)] = 0
+    M0 = np.zeros((n, n))
+    yR, = np.where(R)
+    M0[np.ix_(yR, yR)] = M
+    return M0
+
+
+def binarize(W, copy=True):
+    if copy:
+        W = W.copy()
+    W[W != 0] = 1
+    return W
+
+def distance_bin(G):
+    G = binarize(G, copy=True)
+    D = np.eye(len(G))
+    n = 1
+    nPATH = G.copy()  # n path matrix
+    L = (nPATH != 0)  # shortest n-path matrix
+
+    while np.any(L):
+        D += n * L
+        n += 1
+        nPATH = np.dot(nPATH, G)
+        L = (nPATH != 0) * (D == 0)
+
+    D[D == 0] = np.inf  # disconnected nodes are assigned d=inf
+    np.fill_diagonal(D, 0)
+    return D
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 data_file = str(config['conmat'])
-
-
 print("Loading connectivity matrix...")
+sc = pd.read_csv(data_file,header=None) #load data 
+sc=sc.to_numpy()
+a=sc
+abin=sc.copy()
+abin[abin>0]=1
+n = len(sc)
 
-CIJ = pd.read_csv(data_file) #load data 
+gammavals=config['gammavals']
+#t=config['t']
 
-#weighted communicability
-N = np.size(CIJ,1)
-B = sum(CIJ.transpose())
-C = np.power(B, -0.5)
-D = np.diag(C)
-E = np.matmul(np.matmul(D,CIJ),D)
-F = expm(E)
-F[np.diag_indices_from(F)] = 0
 
-#MEan fisrt passage time
-P = np.linalg.solve(np.diag(np.sum(CIJ, axis=1)), CIJ)
+print("binary predictors...")
+PLbin = distance_bin(abin)                      # path length
+Gbin = expm(abin)                               # communicability
+Cosbin = 1 - squareform(pdist(abin,'cosine'))   # cosine distance
+SIbin = search_information(abin,'inv',False)    # search info
+PTbin = path_transitivity(abin,'inv')           # path transitivity
+mfptbin = stats.zscore(mean_first_passage_time(abin)) # mean first passage time
+MIbin = matching_ind_und(abin)                  # matching index
+#FGbin = fcn_flow_graph(abin,np.ones(n,1),t) # flow graphs
 
-n = len(P)
-D, V = np.linalg.eig(P.T)
 
-aux = np.abs(D - 1)
-index = np.where(aux == aux.min())[0]
+print("weighted predictors...")
+Gwei = communicability_wei(a)                  # communicabi
+Coswei = 1 - squareform(pdist(a,'cosine'))     # cosine distance
+mfptwei = stats.zscore(mean_first_passage_time(a))   # mean first passage time
+MIwei = matching_ind_und(a)                    # matching index                          
+L = a**-gammavals                # convert weight to cost
+PLwei = distance_wei_floyd(L)[0]               # path length
+L[np.isinf(L) ]= 0
+SIwei = search_information(L,transform=None,has_memory=False)      # search info
+PTwei = path_transitivity(L,transform=None)             # path transitivity
+#FGwei = fcn_flow_graph(a,np.ones(n,1),tval) # flow graphs
 
-if aux[index] > 10e-3:
-    raise ValueError("Cannot find eigenvalue of 1. Minimum eigenvalue " +
-                        "value is {0}. Tolerance was ".format(aux[index]+1) +
-                        "set at 10e-3.")
+if config['pred_type']=='all':
+    print("concatenate all the predictors...")
+    all_predictors=np.concatenate((PLbin,PLwei,Gwei,Gbin,Coswei,Cosbin,SIbin,SIwei,PTbin,PTwei,MIwei,MIbin,mfptwei,mfptbin)).transpose()
 
-w = V[:, index].T
-w = w / np.sum(w)
+    print("Saving csv file (all the predictors)...")
+    np.savetxt('output/all_predictors.csv',all_predictors,delimiter=',') 
 
-W = np.real(np.repeat(w, n, 0))
-I = np.eye(n)
 
-Z = np.linalg.inv(I - P + W)
-
-mfpt = (np.repeat(np.atleast_2d(np.diag(Z)), n, 0) - Z) / W
-
-print("Saving csv file...")
-np.savetxt('outputDirectory/wei_comm.csv',F,delimiter=',') 
-np.savetxt('outputDirectory/mfpt.csv',mfpt,delimiter=',') 
+else:
+    print("Saving csv file (individual predictors)...")
+    np.savetxt('output/PLbin.csv',PLbin,delimiter=',') 
+    np.savetxt('output/PLwei.csv',PLwei,delimiter=',') 
+    np.savetxt('output/Gwei.csv',Gwei,delimiter=',') 
+    np.savetxt('output/Gbin.csv',Gbin,delimiter=',')
+    np.savetxt('output/Coswei.csv',Coswei,delimiter=',') 
+    np.savetxt('output/Cosbin.csv',Cosbin,delimiter=',')
+    np.savetxt('output/SIbin.csv',SIbin,delimiter=',')
+    np.savetxt('output/SIwei.csv',SIwei,delimiter=',')
+    np.savetxt('output/PTbin.csv',PTbin,delimiter=',')
+    np.savetxt('output/PTwei.csv',PTwei,delimiter=',')
+    np.savetxt('output/MIwei.csv',MIwei,delimiter=',')
+    np.savetxt('output/MIbin.csv',MIbin,delimiter=',')
+    np.savetxt('output/mfptwei.csv',mfptwei,delimiter=',')
+    np.savetxt('output/mfptbin.csv',mfptbin,delimiter=',')
 
 
 # output type is conmat.
