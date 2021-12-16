@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 # Choosing config file
-configFilename = "config-sample.json"
+configFilename = "config.json"
 argCount = len(sys.argv)
 if(argCount > 1):
     configFilename = sys.argv[1]
