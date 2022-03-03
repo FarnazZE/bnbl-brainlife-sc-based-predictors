@@ -356,7 +356,7 @@ def distance_bin(G):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-data_file = str(config['conmat'])
+data_file = str(config['networkneuro'])
 print("Loading connectivity matrix...")
 sc = pd.read_csv(data_file,header=None) #load data 
 sc=sc.to_numpy()
