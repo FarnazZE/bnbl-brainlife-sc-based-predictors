@@ -1,5 +1,5 @@
 {
-    "networkneuro": "data/hcp_group_mtrx-400.csv",
+    "conmat": "data/hcp_group_mtrx-400.csv",
     "pred_type": "all" ,
     "gammavals":0.5
 }
