@@ -357,7 +357,7 @@ if(not os.path.exists(outputDirectory)):
 with open(configFilename, "r") as fd:
 	config = json.load(fd)
 	
-indexFilename = config["index"]
+
 labelFilename = config["label"]
 CSVDirectory = config["csv"]     
 
