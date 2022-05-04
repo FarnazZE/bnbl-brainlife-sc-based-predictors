@@ -338,6 +338,8 @@ def distance_bin(G):
     np.fill_diagonal(D, 0)
     return D
 
+def loadCSVMatrix(filename):
+	return np.loadtxt(filename,delimiter=",")
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # Choosing config file
 configFilename = "config.json"
@@ -363,17 +365,19 @@ labelFilename = config["label"]
 CSVDirectory = config["csv"]   
 
 
-
-
-
 with open(indexFilename, "r") as fd:
 	indexData = json.load(fd)
+
+with open(labelFilename, "r") as fd:
+	labelData = json.load(fd)
+	labelDataHasHeader = False
 	
  
-    
 for entry in indexData:
 	entryFilename = entry["filename"]
-	sc = np.loadtxt(os.path.join(CSVDirectory, entryFilename))#load data 
+	sc = loadCSVMatrix(os.path.join(CSVDirectory, entryFilename))
+	
+
 
 a=sc
 abin=sc.copy()
