@@ -351,14 +351,17 @@ outputDirectory = "output"
 if(not os.path.exists(outputDirectory)):
     os.makedirs(outputDirectory)
 
-indexFilename = config["index"]
-labelFilename = config["label"]
-CSVDirectory = config["csv"]     
 
 
 # Reading config file
 with open(configFilename, "r") as fd:
 	config = json.load(fd)
+	
+indexFilename = config["index"]
+labelFilename = config["label"]
+CSVDirectory = config["csv"]     
+
+
 
 
 
