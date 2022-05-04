@@ -1,5 +1,9 @@
 {
-    "conmat": "data/hcp_group_mtrx-400.csv",
+    {
+    "index": "data/index.json",
+    "label": "data/label.json",
+    "csv": "data/csv",
     "pred_type": "all" ,
     "gammavals":0.5
 }
+
