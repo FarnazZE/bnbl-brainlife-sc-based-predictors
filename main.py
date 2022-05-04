@@ -24,10 +24,15 @@ outputDirectory = "output"
 if(not os.path.exists(outputDirectory)):
     os.makedirs(outputDirectory)
 
+    
+
+
 # Reading config file
 with open(configFilename, "r") as fd:
     config = json.load(fd)
 
+with open(indexFilename, "r") as fd:
+	indexData = json.load(fd)
 #Functions
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def retrieve_shortest_path(s, t, hops, Pmat):
