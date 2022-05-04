@@ -6,6 +6,11 @@
 set -e
 set -x
 
+# networkName=$(jq -r .network config.json)
+# realizations=$(jq -r .realizations config.json)
+# alpha=$(jq -r .alpha config.json)
+# ./main.py $networkName $realizations $alpha
+
 chmod +x main.py
 SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://filsilva/cxnetwork:0.2.3 ./main.py config.json
 
