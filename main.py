@@ -12,26 +12,6 @@ from pathlib import Path
 
 
 
-# Choosing config file
-configFilename = "config.json"
-argCount = len(sys.argv)
-if(argCount > 1):
-    configFilename = sys.argv[1]
-
-# Defining paths
-outputDirectory = "output"
-
-if(not os.path.exists(outputDirectory)):
-    os.makedirs(outputDirectory)
-
-    
-
-
-# Reading config file
-with open(configFilename, "r") as fd:
-    config = json.load(fd)
-
-
 #Functions
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def retrieve_shortest_path(s, t, hops, Pmat):
@@ -359,6 +339,25 @@ def distance_bin(G):
     return D
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# Choosing config file
+configFilename = "config.json"
+argCount = len(sys.argv)
+if(argCount > 1):
+    configFilename = sys.argv[1]
+
+# Defining paths
+outputDirectory = "output"
+
+if(not os.path.exists(outputDirectory)):
+    os.makedirs(outputDirectory)
+
+    
+
+
+# Reading config file
+with open(configFilename, "r") as fd:
+    config = json.load(fd)
+
 indexFilename = config["index"]
 labelFilename = config["label"]
 CSVDirectory = config["csv"]
@@ -369,7 +368,7 @@ with open(indexFilename, "r") as fd:
     
 for entry in indexData:
 	entryFilename = entry["filename"]
-    sc = np.loadtxt(os.path.join(CSVDirectory, entryFilename))#load data 
+    	sc = np.loadtxt(os.path.join(CSVDirectory, entryFilename))#load data 
     
 
 a=sc
