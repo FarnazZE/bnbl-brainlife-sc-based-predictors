@@ -358,8 +358,7 @@ def distance_bin(G):
 
 data_file = str(config['conmat'])
 print("Loading connectivity matrix...")
-sc = pd.read_csv(data_file,header=None) #load data 
-sc=sc.to_numpy()
+sc = np.loadtxt(data_file) #load data 
 a=sc
 abin=sc.copy()
 abin[abin>0]=1
