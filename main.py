@@ -356,15 +356,16 @@ if(not os.path.exists(outputDirectory)):
 
 # Reading config file
 with open(configFilename, "r") as fd:
-    config = json.load(fd)
+	config = json.load(fd)
 
-indexFilename = config["index"]
-labelFilename = config["label"]
-CSVDirectory = config["csv"]
+
 
 with open(indexFilename, "r") as fd:
 	indexData = json.load(fd)
-    
+	
+indexFilename = config["index"]
+labelFilename = config["label"]
+CSVDirectory = config["csv"]    
     
 for entry in indexData:
 	entryFilename = entry["filename"]
