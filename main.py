@@ -359,11 +359,19 @@ def distance_bin(G):
     return D
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+indexFilename = config["index"]
+labelFilename = config["label"]
+CSVDirectory = config["csv"]
 
-data_file = str(config['csv'])
-print("Loading connectivity matrix...")
-sc = np.loadtxt(data_file,delimiter=",")#load data 
-sc=sc.numpy()
+with open(indexFilename, "r") as fd:
+	indexData = json.load(fd)
+    
+    
+for entry in indexData:
+	entryFilename = entry["filename"]
+    sc = np.loadtxt(os.path.join(CSVDirectory, entryFilename))#load data 
+    
+
 a=sc
 abin=sc.copy()
 abin[abin>0]=1
