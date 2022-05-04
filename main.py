@@ -369,8 +369,7 @@ CSVDirectory = config["csv"]
     
 for entry in indexData:
 	entryFilename = entry["filename"]
-    	sc = np.loadtxt(os.path.join(CSVDirectory, entryFilename))#load data 
-    
+	sc = np.loadtxt(os.path.join(CSVDirectory, entryFilename))#load data 
 
 a=sc
 abin=sc.copy()
