@@ -358,7 +358,9 @@ with open(configFilename, "r") as fd:
 	config = json.load(fd)
 	
 
-#CSVDirectory = config["csv"]     
+indexFilename = config["index"]
+labelFilename = config["label"]
+CSVDirectory = config["csv"]   
 
 
 
