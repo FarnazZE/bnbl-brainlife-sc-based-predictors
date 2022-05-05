@@ -34,4 +34,9 @@ with open(configFilename, "r") as fd:
 
 
 
-indexFilename = config["conmat"]
+data_file = str(config['conmat'])
+
+
+print("Loading connectivity matrix...")
+
+a = pd.read_csv(data_file) #load data 
