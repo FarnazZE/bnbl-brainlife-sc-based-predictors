@@ -1,8 +1,0 @@
-{
-    "index": "data/index.json",
-    "label": "data/label.json",
-    "csv": "data/csv",
-    "pred_type": "all" ,
-    "gammavals":0.5
-}
-
