@@ -129,7 +129,7 @@ def search_information(adjacency, transform=None, has_memory=False):
     return SI
 
 
-#added by Farnaz
+
 def path_transitivity(W,transform=None):        
     n=len(W)
     m=np.zeros((n,n))
