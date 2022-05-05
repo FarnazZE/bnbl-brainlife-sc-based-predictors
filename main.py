@@ -416,7 +416,7 @@ MIwei = matching_ind(a)                    # matching index
 L = a**-gammavals                # convert weight to cost
 PLwei = distance_wei_floyd(L)[0]               # path length
 L[np.isinf(L) ]= 0
-SIwei = search_information(L,transform=None,has_memory=False)      # search info
+#SIwei = search_information(L,transform=None,has_memory=False)      # search info
 PTwei = path_transitivity(L,transform=None)             # path transitivity
 #FGwei = fcn_flow_graph(a,np.ones(n,1),tval) # flow graphs
 
