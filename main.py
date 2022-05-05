@@ -421,33 +421,33 @@ L[np.isinf(L) ]= 0
 #FGwei = fcn_flow_graph(a,np.ones(n,1),tval) # flow graphs
 
 
-if config['pred_type']=='all':
-	print("concatenate all the predictors...")
-	all_predictors=np.concatenate((PLbin,PLwei,Gwei,Gbin,Coswei,Cosbin,SIbin,SIwei,PTbin,PTwei,MIwei,MIbin,mfptwei,mfptbin)).transpose()
+#if config['pred_type']=='all':
+#	print("concatenate all the predictors...")
+#	all_predictors=np.concatenate((PLbin,PLwei,Gwei,Gbin,Coswei,Cosbin,SIbin,SIwei,PTbin,PTwei,MIwei,MIbin,mfptwei,mfptbin)).transpose()
 
 
-	print("Saving csv file (all the predictors)...")
-	np.savetxt('output/all_predictors.csv',all_predictors,delimiter=',') 
+#	print("Saving csv file (all the predictors)...")
+#	np.savetxt('output/all_predictors.csv',all_predictors,delimiter=',') 
 
 
 
 
-else:
-	print("Saving csv file (individual predictors)...")
-	np.savetxt('output/PLbin.csv',PLbin,delimiter=',') 
-	np.savetxt('output/PLwei.csv',PLwei,delimiter=',') 
-	np.savetxt('output/Gwei.csv',Gwei,delimiter=',') 
-	np.savetxt('output/Gbin.csv',Gbin,delimiter=',')
-	np.savetxt('output/Coswei.csv',Coswei,delimiter=',') 
-	np.savetxt('output/Cosbin.csv',Cosbin,delimiter=',')
-	np.savetxt('output/SIbin.csv',SIbin,delimiter=',')
-	np.savetxt('output/SIwei.csv',SIwei,delimiter=',')
-	np.savetxt('output/PTbin.csv',PTbin,delimiter=',')
-	np.savetxt('output/PTwei.csv',PTwei,delimiter=',')
-	np.savetxt('output/MIwei.csv',MIwei,delimiter=',')
-	np.savetxt('output/MIbin.csv',MIbin,delimiter=',')
-	np.savetxt('output/mfptwei.csv',mfptwei,delimiter=',')
-	np.savetxt('output/mfptbin.csv',mfptbin,delimiter=',')
+#else:
+print("Saving csv file (individual predictors)...")
+np.savetxt('output/PLbin.csv',PLbin,delimiter=',') 
+	#np.savetxt('output/PLwei.csv',PLwei,delimiter=',') 
+	#np.savetxt('output/Gwei.csv',Gwei,delimiter=',') 
+	#np.savetxt('output/Gbin.csv',Gbin,delimiter=',')
+	#np.savetxt('output/Coswei.csv',Coswei,delimiter=',') 
+	#np.savetxt('output/Cosbin.csv',Cosbin,delimiter=',')
+	#np.savetxt('output/SIbin.csv',SIbin,delimiter=',')
+	#np.savetxt('output/SIwei.csv',SIwei,delimiter=',')
+	#np.savetxt('output/PTbin.csv',PTbin,delimiter=',')
+	#np.savetxt('output/PTwei.csv',PTwei,delimiter=',')
+	#np.savetxt('output/MIwei.csv',MIwei,delimiter=',')
+	#np.savetxt('output/MIbin.csv',MIbin,delimiter=',')
+	#np.savetxt('output/mfptwei.csv',mfptwei,delimiter=',')
+	#np.savetxt('output/mfptbin.csv',mfptbin,delimiter=',')
 
 
 
