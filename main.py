@@ -368,8 +368,11 @@ if(not os.path.exists(outputDirectory)):
 with open(configFilename, "r") as fd:
 		config = json.load(fd)
 
-a=config['conmat']['index']
+config_dir=config['conmat']
 
+for i in config_dir:
+	if i=='csv':
+		CSVDirectory = config_dir["csv"]
 
 indexFilename = config["index"]
 labelFilename = config["label"]
