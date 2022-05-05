@@ -376,7 +376,7 @@ data_file = str(config['conmat'])
 
 
 print("Loading connectivity matrix...")
-
+a = np.loadtxt(data_file) #load data 
 a = pd.read_csv(data_file) #load data 
 
 abin=sc.copy()
