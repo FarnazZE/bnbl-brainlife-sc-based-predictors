@@ -411,7 +411,7 @@ MIbin = matching_ind_und(abin)                  # matching index
 print("weighted predictors...")
 #Gwei = communicability_wei(a)                  # communicabi
 Coswei = 1 - squareform(pdist(a,'cosine'))     # cosine distance
-mfptwei = stats.zscore(mean_first_passage_time(a))   # mean first passage time
+#mfptwei = stats.zscore(mean_first_passage_time(a))   # mean first passage time
 MIwei = matching_ind(a)                    # matching index                          
 L = a**-gammavals                # convert weight to cost
 PLwei = distance_wei_floyd(L)[0]               # path length
