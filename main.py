@@ -359,7 +359,7 @@ if(argCount > 1):
 		configFilename = sys.argv[1]
 
 outputDirectory = "output"
-outputFile = PJ(outputDirectory,"network.json.gz")
+
 
 if(not os.path.exists(outputDirectory)):
 		os.makedirs(outputDirectory)
@@ -368,9 +368,7 @@ if(not os.path.exists(outputDirectory)):
 with open(configFilename, "r") as fd:
 		config = json.load(fd)
 
-# "index": "data/index.json",
-# "label": "data/label.json",
-# "csv": "data/csv",
+
 
 
 indexFilename = config["index"]
