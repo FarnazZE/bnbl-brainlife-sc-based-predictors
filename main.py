@@ -368,15 +368,20 @@ if(not os.path.exists(outputDirectory)):
 with open(configFilename, "r") as fd:
 		config = json.load(fd)
 
-config_dir=config['conmat']
+indexFilename = config["index"]
+labelFilename = config["label"]
+CSVDirectory = config["csv"]
 
-for i in config_dir:
-	if i=='csv':
-		CSVDirectory = config_dir["csv"]
-a = np.loadtxt(CSVDirectory)
+with open(indexFilename, "r") as fd:
+	indexData = json.load(fd)
 
+with open(labelFilename, "r") as fd:
+	labelData = json.load(fd)
+	labelDataHasHeader = False
 
-#a = np.loadtxt(os.path.join(CSVDirectory, 'csv'))
+for entry in indexData:
+	entryFilename = entry["filename"]
+	a = np.loadtxt(os.path.join(CSVDirectory, entryFilename))
 
 
 abin=a.copy()
