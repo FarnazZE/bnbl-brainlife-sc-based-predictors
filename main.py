@@ -34,16 +34,4 @@ with open(configFilename, "r") as fd:
 
 
 
-indexFilename = config["index"]
-labelFilename = config["label"]
-CSVDirectory = config["csv"]
-
-with open(indexFilename, "r") as fd:
-	indexData = json.load(fd)
-
-with open(labelFilename, "r") as fd:
-	labelData = json.load(fd)
-	labelDataHasHeader = False
-
-for entry in indexData:
-	entryFilename = entry["filename"]
+indexFilename = config["conmat"]
