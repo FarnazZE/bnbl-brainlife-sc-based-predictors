@@ -386,7 +386,7 @@ for entry in indexData:
 
 abin=a.copy()
 abin[abin>0]=1
-n = len(sc)
+n = len(a)
 
 
 gammavals=config['gammavals']
