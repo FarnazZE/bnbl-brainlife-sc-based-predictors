@@ -373,25 +373,8 @@ config_dir=config['conmat']
 for i in config_dir:
 	if i=='csv':
 		CSVDirectory = config_dir["csv"]
+a = np.loadtxt(CSVDirectory)
 
-indexFilename = config["index"]
-labelFilename = config["label"]
-CSVDirectory = config["csv"]
-
-with open(indexFilename, "r") as fd:
-	indexData = json.load(fd)
-
-with open(labelFilename, "r") as fd:
-	labelData = json.load(fd)
-	labelDataHasHeader = False
-
-matrices = []
-networkProperties = []
-labels = []
-for entry in indexData:
-	entryFilename = entry["filename"]
-	a = loadCSVMatrix(os.path.join(CSVDirectory, entryFilename))
-	
 
 #a = np.loadtxt(os.path.join(CSVDirectory, 'csv'))
 
