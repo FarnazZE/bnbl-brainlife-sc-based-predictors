@@ -12,21 +12,6 @@ from pathlib import Path
 
 
 
-
-#!/usr/bin/env python
-
-import sys
-import os.path
-from os.path import join as PJ
-from collections import OrderedDict
-import re
-import json
-import numpy as np
-from tqdm import tqdm
-import igraph as ig
-import jgf
-
-
 def loadCSVMatrix(filename):
 	return np.loadtxt(filename,delimiter=",")
 
