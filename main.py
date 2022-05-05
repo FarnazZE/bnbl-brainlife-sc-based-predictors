@@ -368,7 +368,7 @@ if(not os.path.exists(outputDirectory)):
 with open(configFilename, "r") as fd:
 		config = json.load(fd)
 
-a=config
+a=config['conmat']
 
 
 indexFilename = config["index"]
