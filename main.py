@@ -381,7 +381,7 @@ with open(labelFilename, "r") as fd:
 
 for entry in indexData:
 	entryFilename = entry["filename"]
-	a = np.loadtxt(os.path.join(CSVDirectory, entryFilename))
+	a = np.loadtxt(os.path.join(CSVDirectory, entryFilename),delimiter=",")
 
 
 abin=a.copy()
