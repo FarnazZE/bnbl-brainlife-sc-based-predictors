@@ -372,7 +372,7 @@ with open(configFilename, "r") as fd:
 
 
 
-indexFilename = config["index"]
+indexFilename = config["id"]
 labelFilename = config["label"]
 CSVDirectory = config["conmat"]
 
@@ -389,7 +389,7 @@ for entry in indexData:
 #a = np.loadtxt(os.path.join(CSVDirectory, 'csv'))
 
 
-abin=sc.copy()
+abin=a.copy()
 abin[abin>0]=1
 n = len(sc)
 
