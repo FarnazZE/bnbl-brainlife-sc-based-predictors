@@ -401,7 +401,7 @@ Gbin = expm(abin)                               # communicability
 Cosbin = 1 - squareform(pdist(abin,'cosine'))   # cosine distance
 #SIbin = search_information(abin,'inv',False)    # search info
 #PTbin = path_transitivity(abin,'inv')           # path transitivity
-mfptbin = stats.zscore(mean_first_passage_time(abin)) # mean first passage time
+#mfptbin = stats.zscore(mean_first_passage_time(abin)) # mean first passage time
 MIbin = matching_ind_und(abin)                  # matching index
 #FGbin = fcn_flow_graph(abin,np.ones(n,1),t) # flow graphs
 
