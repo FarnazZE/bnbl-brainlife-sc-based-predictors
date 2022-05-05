@@ -372,9 +372,21 @@ with open(configFilename, "r") as fd:
 
 
 
-CSVDirectory = str(config['conmat'])
+indexFilename = config["index"]
+labelFilename = config["label"]
+CSVDirectory = config["conmat"]
 
-a = np.loadtxt(os.path.join(CSVDirectory, 'csv'))
+with open(indexFilename, "r") as fd:
+	indexData = json.load(fd)
+
+
+
+for entry in indexData:
+	entryFilename = entry["filename"]
+	a = loadCSVMatrix(os.path.join(CSVDirectory, entryFilename))
+	
+
+#a = np.loadtxt(os.path.join(CSVDirectory, 'csv'))
 
 
 abin=sc.copy()
