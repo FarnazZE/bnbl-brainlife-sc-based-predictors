@@ -353,14 +353,13 @@ def distance_bin(G):
     return D
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-
 configFilename = "config.json"
 argCount = len(sys.argv)
 if(argCount > 1):
 		configFilename = sys.argv[1]
 
 outputDirectory = "output"
-
+outputFile = PJ(outputDirectory,"network.json.gz")
 
 if(not os.path.exists(outputDirectory)):
 		os.makedirs(outputDirectory)
@@ -369,18 +368,25 @@ if(not os.path.exists(outputDirectory)):
 with open(configFilename, "r") as fd:
 		config = json.load(fd)
 
+# "index": "data/index.json",
+# "label": "data/label.json",
+# "csv": "data/csv",
 
 
-
-indexFilename = config["id"]
+indexFilename = config["index"]
 labelFilename = config["label"]
-CSVDirectory = config["conmat"]
+CSVDirectory = config["csv"]
 
 with open(indexFilename, "r") as fd:
 	indexData = json.load(fd)
 
+with open(labelFilename, "r") as fd:
+	labelData = json.load(fd)
+	labelDataHasHeader = False
 
-
+matrices = []
+networkProperties = []
+labels = []
 for entry in indexData:
 	entryFilename = entry["filename"]
 	a = loadCSVMatrix(os.path.join(CSVDirectory, entryFilename))
