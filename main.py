@@ -372,12 +372,10 @@ with open(configFilename, "r") as fd:
 
 
 
-data_file = str(config['conmat'])
+CSVDirectory = str(config['conmat'])
 
+a = np.loadtxt(os.path.join(CSVDirectory, 'csv'))
 
-print("Loading connectivity matrix...")
-a = np.loadtxt(data_file) #load data 
-a = pd.read_csv(data_file) #load data 
 
 abin=sc.copy()
 abin[abin>0]=1
