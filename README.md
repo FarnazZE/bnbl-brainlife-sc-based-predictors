@@ -62,7 +62,7 @@ A sample dataset is provided in folder `data` and `config-sample.json`
 
 ## Output
 
-The output is a HTML report with figures in PDF and PNG.
+The outputs are csv files. 
 
 ### Dependencies
 
