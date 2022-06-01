@@ -7,6 +7,7 @@ from scipy.spatial.distance import pdist, squareform
 import os
 import sys
 from pathlib import Path
+import pandas as pd
 
 #Functions
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
