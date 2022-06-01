@@ -398,10 +398,10 @@ print("binary predictors...")
 PLbin = distance_bin(abin)                      # path length
 Gbin = expm(abin)                               # communicability
 Cosbin = 1 - squareform(pdist(abin,'cosine'))   # cosine distance
-SIbin = search_information(abin,'inv',False)    # search info
 PTbin = path_transitivity(abin,'inv')           # path transitivity
 mfptbin = mean_first_passage_time(abin) # mean first passage time
 MIbin = matching_ind_und(abin)                  # matching index
+SIbin = search_information(abin,'inv',False)    # search info
 
 
 
