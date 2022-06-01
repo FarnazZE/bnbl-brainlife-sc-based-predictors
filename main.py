@@ -1,16 +1,12 @@
 #!/usr/bin/env python
-
 import json
 import numpy as np
-import pandas as pd
 from scipy import stats
 from scipy.linalg import expm
 from scipy.spatial.distance import pdist, squareform
 import os
 import sys
 from pathlib import Path
-
-
 
 #Functions
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -239,7 +235,7 @@ def matching_ind_und(CIJ0):
         use *= inv_eye
 
         ncon1 = c1 * use
-        ncon2 = c1 * CIJ
+        ncon2 = CIJ * use
         ncon = np.sum(ncon1 + ncon2, axis=1)
         #print(ncon)
 
@@ -351,37 +347,40 @@ def distance_bin(G):
     D[D == 0] = np.inf  # disconnected nodes are assigned d=inf
     np.fill_diagonal(D, 0)
     return D
+    ############################
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-configFilename = "config.json"
+
+# Choosing config file  ##change "config.json" to "config-sample.json" to test your code locally
+configFilename = "config-sample.json"
 argCount = len(sys.argv)
 if(argCount > 1):
-		configFilename = sys.argv[1]
+    configFilename = sys.argv[1]
 
+# Defining paths
 outputDirectory = "output"
 
-
 if(not os.path.exists(outputDirectory)):
-		os.makedirs(outputDirectory)
+    os.makedirs(outputDirectory)
 
-
+# Reading config file
 with open(configFilename, "r") as fd:
-		config = json.load(fd)
+    config = json.load(fd)
+
 
 indexFilename = config["index"]
 labelFilename = config["label"]
 CSVDirectory = config["csv"]
 
 with open(indexFilename, "r") as fd:
-	indexData = json.load(fd)
+    indexData = json.load(fd)
 
 with open(labelFilename, "r") as fd:
-	labelData = json.load(fd)
-	labelDataHasHeader = False
+    labelData = json.load(fd)
+    labelDataHasHeader = False
 
 for entry in indexData:
-	entryFilename = entry["filename"]
-	a = np.loadtxt(os.path.join(CSVDirectory, entryFilename),delimiter=",")
+    entryFilename = entry["filename"]
+    a = np.loadtxt(os.path.join(CSVDirectory, entryFilename),delimiter=",")
 
 
 abin=a.copy()
@@ -390,7 +389,6 @@ n = len(a)
 
 
 gammavals=config['gammavals']
-#t=config['t']
 
 
 
@@ -399,59 +397,39 @@ print("binary predictors...")
 PLbin = distance_bin(abin)                      # path length
 Gbin = expm(abin)                               # communicability
 Cosbin = 1 - squareform(pdist(abin,'cosine'))   # cosine distance
-#SIbin = search_information(abin,'inv',False)    # search info
-#PTbin = path_transitivity(abin,'inv')           # path transitivity
-#mfptbin = stats.zscore(mean_first_passage_time(abin)) # mean first passage time
+SIbin = search_information(abin,'inv',False)    # search info
+PTbin = path_transitivity(abin,'inv')           # path transitivity
+mfptbin = mean_first_passage_time(abin) # mean first passage time
 MIbin = matching_ind_und(abin)                  # matching index
-#FGbin = fcn_flow_graph(abin,np.ones(n,1),t) # flow graphs
+
 
 
 
 
 print("weighted predictors...")
-#Gwei = communicability_wei(a)                  # communicabi
+Gwei = communicability_wei(a)                  # communicabi
 Coswei = 1 - squareform(pdist(a,'cosine'))     # cosine distance
-#mfptwei = stats.zscore(mean_first_passage_time(a))   # mean first passage time
+mfptwei = mean_first_passage_time(a)  # mean first passage time
 MIwei = matching_ind(a)                    # matching index                          
 L = a**-gammavals                # convert weight to cost
 PLwei = distance_wei_floyd(L)[0]               # path length
 L[np.isinf(L) ]= 0
-#SIwei = search_information(L,transform=None,has_memory=False)      # search info
-#PTwei = path_transitivity(L,transform=None)             # path transitivity
-#FGwei = fcn_flow_graph(a,np.ones(n,1),tval) # flow graphs
+SIwei = search_information(L,transform=None,has_memory=False)      # search info
+PTwei = path_transitivity(L,transform=None)             # path transitivity
 
 
-#if config['pred_type']=='all':
-#	print("concatenate all the predictors...")
-#	all_predictors=np.concatenate((PLbin,PLwei,Gwei,Gbin,Coswei,Cosbin,SIbin,SIwei,PTbin,PTwei,MIwei,MIbin,mfptwei,mfptbin)).transpose()
-
-
-#	print("Saving csv file (all the predictors)...")
-#	np.savetxt('output/all_predictors.csv',all_predictors,delimiter=',') 
-
-
-
-
-#else:
 print("Saving csv file (individual predictors)...")
 np.savetxt('output/PLbin.csv',PLbin,delimiter=',') 
-	#np.savetxt('output/PLwei.csv',PLwei,delimiter=',') 
-	#np.savetxt('output/Gwei.csv',Gwei,delimiter=',') 
-	#np.savetxt('output/Gbin.csv',Gbin,delimiter=',')
-	#np.savetxt('output/Coswei.csv',Coswei,delimiter=',') 
-	#np.savetxt('output/Cosbin.csv',Cosbin,delimiter=',')
-	#np.savetxt('output/SIbin.csv',SIbin,delimiter=',')
-	#np.savetxt('output/SIwei.csv',SIwei,delimiter=',')
-	#np.savetxt('output/PTbin.csv',PTbin,delimiter=',')
-	#np.savetxt('output/PTwei.csv',PTwei,delimiter=',')
-	#np.savetxt('output/MIwei.csv',MIwei,delimiter=',')
-	#np.savetxt('output/MIbin.csv',MIbin,delimiter=',')
-	#np.savetxt('output/mfptwei.csv',mfptwei,delimiter=',')
-	#np.savetxt('output/mfptbin.csv',mfptbin,delimiter=',')
-
-
-
-
-# output type is conmat.
-
-
+np.savetxt('output/PLwei.csv',PLwei,delimiter=',') 
+np.savetxt('output/Gwei.csv',Gwei,delimiter=',') 
+np.savetxt('output/Gbin.csv',Gbin,delimiter=',')
+np.savetxt('output/Coswei.csv',Coswei,delimiter=',') 
+np.savetxt('output/Cosbin.csv',Cosbin,delimiter=',')
+np.savetxt('output/SIbin.csv',SIbin,delimiter=',')
+np.savetxt('output/SIwei.csv',SIwei,delimiter=',')
+np.savetxt('output/PTbin.csv',PTbin,delimiter=',')
+np.savetxt('output/PTwei.csv',PTwei,delimiter=',')
+np.savetxt('output/MIwei.csv',MIwei,delimiter=',')
+np.savetxt('output/MIbin.csv',MIbin,delimiter=',')
+np.savetxt('output/mfptwei.csv',mfptwei,delimiter=',')
+#np.savetxt('output/mfptbin.csv',mfptbin,delimiter=',')

@@ -1,20 +1,15 @@
-#!/bin/bash
-#PBS -l nodes=1:ppn=1
-#PBS -l vmem=6gb
-#PBS -l walltime=01:00:00
+#!/bin/bash                     ##executes script using the Bash shell.
+#PBS -l nodes=1:ppn=1           ##PBS stands for Portable Bash Script; these lines
+#PBS -l vmem=6gb                ##specifes what
+#PBS -l walltime=01:00:00       ##resources you are requesting
 
-set -e
-set -x
+set -e                          ##stops the execution of a script if a command or pipeline has an error
+set -x                          ##enables a mode of the shell where all executed commands are printed to the terminal
 
-# networkName=$(jq -r .network config.json)
-# realizations=$(jq -r .realizations config.json)
-# alpha=$(jq -r .alpha config.json)
-# ./main.py $networkName $realizations $alpha
+chmod +x main.py                ##makes main.py executable
+SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://filsilva/cxnetwork:0.2.2 ./main.py config.json
+                                #cxnetwork:0.2.2 is a docker container that inludes App's environment and the dependencies (which can be stored and maintained inside your github repo and injected into an environment container at runtime)
+                                ## uses singularity to run docker (cxnetwork:0.2.2)
+                                ## SINGULARITYENV_ will set the environment variable PYTHONNOUSERSITE inside the container
 
-chmod +x main.py
-SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://filsilva/cxnetwork:0.2.0 ./main.py config.json
-
-echo "done"
-
-
-
+echo "done"                     ##print text or string data into the terminal
