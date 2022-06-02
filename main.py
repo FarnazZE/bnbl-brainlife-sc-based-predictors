@@ -7,8 +7,6 @@ from scipy.spatial.distance import pdist, squareform
 import os
 import sys
 from pathlib import Path
-import pandas as pd
-
 #Functions
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def retrieve_shortest_path(s, t, hops, Pmat):
@@ -352,7 +350,7 @@ def distance_bin(G):
 
 
 # Choosing config file  ##change "config.json" to "config-sample.json" to test your code locally
-configFilename = "config.json"
+configFilename = "config-sample.json"
 argCount = len(sys.argv)
 if(argCount > 1):
     configFilename = sys.argv[1]
@@ -384,9 +382,17 @@ for entry in indexData:
     a = np.loadtxt(os.path.join(CSVDirectory, entryFilename),delimiter=",")
 
 
+K = np.sum(a, axis=0)
+R = (K != 0)
+xR, = np.where(R == 0)
+a = np.delete(np.delete(a, xR, axis=0), xR, axis=1)
+
+
 abin=a.copy()
 abin[abin>0]=1
 n = len(a)
+
+
 
 
 gammavals=config['gammavals']
@@ -398,10 +404,10 @@ print("binary predictors...")
 PLbin = distance_bin(abin)                      # path length
 Gbin = expm(abin)                               # communicability
 Cosbin = 1 - squareform(pdist(abin,'cosine'))   # cosine distance
-PTbin = path_transitivity(abin,'inv')           # path transitivity
 mfptbin = mean_first_passage_time(abin) # mean first passage time
 MIbin = matching_ind_und(abin)                  # matching index
 SIbin = search_information(abin,'inv',False)    # search info
+PTbin = path_transitivity(abin,'inv')           # path transitivity
 
 
 
