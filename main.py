@@ -350,7 +350,7 @@ def distance_bin(G):
 
 
 # Choosing config file  ##change "config.json" to "config-sample.json" to test your code locally
-configFilename = "config-sample.json"
+configFilename = "config.json"
 argCount = len(sys.argv)
 if(argCount > 1):
     configFilename = sys.argv[1]
@@ -424,9 +424,9 @@ L[np.isinf(L) ]= 0
 SIwei = search_information(L,transform=None,has_memory=False)      # search info
 PTwei = path_transitivity(L,transform=None)             # path transitivity
 
-
 print("Saving csv file (individual predictors)...")
-np.savetxt('output/PLbin.csv',PLbin,delimiter=',') 
+
+np.savetxt('output/PLbin.csv',PLbin,delimiter=',')  
 np.savetxt('output/PLwei.csv',PLwei,delimiter=',') 
 np.savetxt('output/Gwei.csv',Gwei,delimiter=',') 
 np.savetxt('output/Gbin.csv',Gbin,delimiter=',')
@@ -440,3 +440,4 @@ np.savetxt('output/MIwei.csv',MIwei,delimiter=',')
 np.savetxt('output/MIbin.csv',MIbin,delimiter=',')
 np.savetxt('output/mfptwei.csv',mfptwei,delimiter=',')
 np.savetxt('output/mfptbin.csv',mfptbin,delimiter=',')
+
