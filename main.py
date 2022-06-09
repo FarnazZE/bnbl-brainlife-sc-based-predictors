@@ -350,13 +350,13 @@ def distance_bin(G):
 
 
 # Choosing config file  ##change "config.json" to "config-sample.json" to test your code locally
-configFilename = "config.json"
+configFilename = "config-sample.json"
 argCount = len(sys.argv)
 if(argCount > 1):
     configFilename = sys.argv[1]
 
 # Defining paths
-outputDirectory = "output"
+outputDirectory = "output/csv"
 
 if(not os.path.exists(outputDirectory)):
     os.makedirs(outputDirectory)
@@ -385,7 +385,12 @@ for entry in indexData:
 K = np.sum(a, axis=0)
 R = (K != 0)
 xR, = np.where(R == 0)
-a = np.delete(np.delete(a, xR, axis=0), xR, axis=1)
+yR, =np.where(R != 0)
+if config["clean data"]=="true":
+    a = np.delete(np.delete(a, xR, axis=0), xR, axis=1)
+if len(xR)>0 and config["clean data"]=="false":
+    print("connectivity matrix (network) should be fully connected")
+
 
 
 abin=a.copy()
@@ -426,18 +431,22 @@ PTwei = path_transitivity(L,transform=None)             # path transitivity
 
 print("Saving csv file (individual predictors)...")
 
-np.savetxt('output/PLbin.csv',PLbin,delimiter=',')  
-np.savetxt('output/PLwei.csv',PLwei,delimiter=',') 
-np.savetxt('output/Gwei.csv',Gwei,delimiter=',') 
-np.savetxt('output/Gbin.csv',Gbin,delimiter=',')
-np.savetxt('output/Coswei.csv',Coswei,delimiter=',') 
-np.savetxt('output/Cosbin.csv',Cosbin,delimiter=',')
-np.savetxt('output/SIbin.csv',SIbin,delimiter=',')
-np.savetxt('output/SIwei.csv',SIwei,delimiter=',')
-np.savetxt('output/PTbin.csv',PTbin,delimiter=',')
-np.savetxt('output/PTwei.csv',PTwei,delimiter=',')
-np.savetxt('output/MIwei.csv',MIwei,delimiter=',')
-np.savetxt('output/MIbin.csv',MIbin,delimiter=',')
-np.savetxt('output/mfptwei.csv',mfptwei,delimiter=',')
-np.savetxt('output/mfptbin.csv',mfptbin,delimiter=',')
+np.savetxt('output/csv/PLbin.csv',PLbin,delimiter=',')  
+np.savetxt('output/csv/PLwei.csv',PLwei,delimiter=',') 
+np.savetxt('output/csv/Gwei.csv',Gwei,delimiter=',') 
+np.savetxt('output/csv/Gbin.csv',Gbin,delimiter=',')
+np.savetxt('output/csv/Coswei.csv',Coswei,delimiter=',') 
+np.savetxt('output/csv/Cosbin.csv',Cosbin,delimiter=',')
+np.savetxt('output/csv/SIbin.csv',SIbin,delimiter=',')
+np.savetxt('output/csv/SIwei.csv',SIwei,delimiter=',')
+np.savetxt('output/csv/PTbin.csv',PTbin,delimiter=',')
+np.savetxt('output/csv/PTwei.csv',PTwei,delimiter=',')
+np.savetxt('output/csv/MIwei.csv',MIwei,delimiter=',')
+np.savetxt('output/csv/MIbin.csv',MIbin,delimiter=',')
+np.savetxt('output/csv/mfptwei.csv',mfptwei,delimiter=',')
+np.savetxt('output/csv/mfptbin.csv',mfptbin,delimiter=',')
+
+index={"column"+str(i):"node"+str(j) for i,j in enumerate(yR)}
+with open('output/index.json', 'w') as outfile:
+    json.dump(index,outfile)
 

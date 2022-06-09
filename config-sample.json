@@ -2,5 +2,6 @@
     "index": "data/index.json",
     "label": "data/label.json",
     "csv": "data/csv",
-    "gammavals":0.5
+    "clean data": "true",
+    "gammavals": 0.5
 }
