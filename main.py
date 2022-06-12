@@ -354,7 +354,7 @@ def error(msg):
 	results['errors'].append(msg) 
 	#results['brainlife'].append({"type": "error", "msg": msg}) 
 	print(msg)
-    
+
 
 # Choosing config file  ##change "config.json" to "config-sample.json" to test your code locally
 configFilename = "config-sample.json"
@@ -453,7 +453,7 @@ np.savetxt('output/csv/MIbin.csv',MIbin,delimiter=',')
 np.savetxt('output/csv/mfptwei.csv',mfptwei,delimiter=',')
 np.savetxt('output/csv/mfptbin.csv',mfptbin,delimiter=',')
 
-index={"column"+str(i):"node"+str(j) for i,j in enumerate(yR)}
-with open('output/index.json', 'w') as outfile:
-    json.dump(index,outfile)
+label={"column"+str(i):"node"+str(j) for i,j in enumerate(yR)}
+with open('output/label.json', 'w') as outfile:
+    json.dump(label,outfile)
 
