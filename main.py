@@ -357,7 +357,7 @@ def error(msg):
 
 
 # Choosing config file  ##change "config.json" to "config-sample.json" to test your code locally
-configFilename = "config-sample.json"
+configFilename = "config.json"
 argCount = len(sys.argv)
 if(argCount > 1):
     configFilename = sys.argv[1]
