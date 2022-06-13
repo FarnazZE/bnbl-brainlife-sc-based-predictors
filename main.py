@@ -349,11 +349,11 @@ def distance_bin(G):
     ############################
 
 
-# def error(msg):
-# 	global results
-# 	results['errors'].append(msg) 
-# 	#results['brainlife'].append({"type": "error", "msg": msg}) 
-# 	print(msg)
+def error(msg):
+	global results
+	results['errors'].append(msg) 
+	#results['brainlife'].append({"type": "error", "msg": msg}) 
+	print(msg)
 
 
 # Choosing config file  ##change "config.json" to "config-sample.json" to test your code locally
@@ -395,8 +395,8 @@ xR, = np.where(R == 0)
 yR, =np.where(R != 0)
 if config["clean data"]=="true":
     a = np.delete(np.delete(a, xR, axis=0), xR, axis=1)
-# if len(xR)>0 and config["clean data"]=="false":
-#     error("connectivity matrix (network) should be fully connected")
+if len(xR)>0 and config["clean data"]=="false":
+    error("connectivity matrix (network) should be fully connected")
 
 
 
