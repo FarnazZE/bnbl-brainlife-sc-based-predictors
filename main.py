@@ -348,7 +348,7 @@ def distance_bin(G):
     return D
     ############################
 
-
+results = {"errors": [], "warnings": [], "brainlife": [], "datatype_tags": [], "tags": []}
 def error(msg):
 	global results
 	results['errors'].append(msg) 
