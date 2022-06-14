@@ -394,7 +394,7 @@ K = np.sum(a, axis=0)
 R = (K != 0)
 xR, = np.where(R == 0)
 yR, =np.where(R != 0)
-a = np.delete(np.delete(a, xR, axis=0), xR, axis=1)
+
 if config["clean data"]=="true":
     a = np.delete(np.delete(a, xR, axis=0), xR, axis=1)
 if len(xR)>0 and config["clean data"]=="false":
