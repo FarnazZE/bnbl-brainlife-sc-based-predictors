@@ -357,7 +357,7 @@ def error(msg):
 
 
 # Choosing config file  ##change "config.json" to "config-sample.json" to test your code locally
-configFilename = "config-sample.json"
+configFilename = "config.json"
 argCount = len(sys.argv)
 if(argCount > 1):
     configFilename = sys.argv[1]
@@ -389,15 +389,13 @@ for entry in indexData:
     a = np.loadtxt(os.path.join(CSVDirectory, entryFilename),delimiter=",")
 
 
-
 K = np.sum(a, axis=0)
 R = (K != 0)
 xR, = np.where(R == 0)
 yR, =np.where(R != 0)
-
-if config["clean data"]=="true":
+if config['clean data'] == true:
     a = np.delete(np.delete(a, xR, axis=0), xR, axis=1)
-if len(xR)>0 and config["clean data"]=="false":
+if len(xR)>0 and config['clean data']== false:
     error("connectivity matrix (network) should be fully connected")
 
 
