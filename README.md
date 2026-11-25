@@ -2,6 +2,48 @@
 <!-- [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.1-blue.svg)](https://doi.org/10.25663/brainlife.app.435) -->
 
 # Description
+
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+> **Computes binary and weighted structural-connectivity predictors (path length, communicability, cosine similarity, mean first passage time, matching index, search information, path transitivity) from a connectivity matrix and saves them as CSV matrices.**
+
+Loads a connectivity matrix, optionally removes isolated nodes, converts weights to costs as w^-gamma and computes node-pair predictors on both the binarised and the weighted matrix, each saved as a CSV matrix. Use it to model structure-function relationships, for example as predictors of functional connectivity.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/conmat` |
+| 📤 **Outputs** | `neuro/conmat` |
+| 🐳 **Container** | `filsilva/cxnetwork:0.2.0` |
+| ⚙️ **Resources** | 1 CPUs |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.606](https://doi.org/10.25663/brainlife.app.606) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `input` | `neuro/conmat` | yes | Structural connectivity matrix (CSV) with index and label files. |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `output` | `neuro/conmat` | csv files containing predictors for structural connectivity |
+
+<details>
+<summary><b>⚙️ Parameters</b> (2)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `gammavals` | number | `0.5` | convert edge weight to cost |
+| `remove nodes` | enum |  | remove isolated nodes/ROI (column/rows with all zero values) Options: `true`, `false`. |
+
+</details>
+
+📚 **References used by this App:**
+- Esfahlani FZ, Faskowitz J, Slack J, Misic B, Betzel R. Local structure-function relationships in human brain networks across the human lifespan. bioRxiv (2021).
+
+<!-- brainlife-app:end -->
+
 Brainlife App for generating a set of predictors from structural connectivity matrix. 
 ### Authors
 - [Farnaz Zamani Esfahlani]
